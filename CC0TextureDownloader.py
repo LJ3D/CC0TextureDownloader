@@ -3,6 +3,15 @@ import csv
 import copy
 import zipfile
 import os
+import re
+
+def getFilename_fromCd(cd):
+	if not cd:
+		return None
+	fname = re.findall('filename=(.+)', cd)
+	if len(fname) == 0:
+		return None
+	return fname[0]
 
 def filterByKeyword(assets, keyword):
 	i = 0
@@ -72,11 +81,22 @@ def download(assets):
 					os.remove(i[0]+'_'+i[1]+'.'+i[2])
 		except:
 			print("Failed to download {0}_{1} from {2}".format(i[0], i[1], i[4]))
-		
 
-print("Note: Included csv file may be out of date, go to https://ambientcg.com/api/v2/downloads_csv to download an up to date version")
-defaultcsv = 'ambientCG_downloads_csv.csv' #['assetId', 'downloadAttribute', 'filetype', 'size', 'downloadLink', 'rawLink']
-with open(defaultcsv, newline='') as f:
+
+
+
+
+headers = {'User-Agent' : 'LJ3DSCRIPT'}
+url = 'https://ambientcg.com/api/v2/downloads_csv'
+
+print("Downloading asset data from https://ambientcg.com/api/v2/downloads_csv")
+r = requests.get(url, allow_redirects=True, headers=headers)
+filename = getFilename_fromCd(r.headers.get('content-disposition'))
+open(filename, 'wb').write(r.content)
+print("Saved asset data as {0}".format(filename))
+#['assetId', 'downloadAttribute', 'filetype', 'size', 'downloadLink', 'rawLink']
+print("Opening asset data csv file")
+with open(filename, newline='') as f:
 	reader = csv.reader(f)
 	assets = list(reader)
 assets.pop(0)
