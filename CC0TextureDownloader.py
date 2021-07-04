@@ -54,10 +54,10 @@ def download(assets):
 	print("Would you like to delete .zip files after they are extracted? (y/n)")
 	while True:
 		userInput = input()
-		if userInput == 'y':
+		if userInput == 'y' or userInput == 'Y':
 			deleteZips = True
 			break
-		if userInput == 'n':
+		if userInput == 'n' or userInput == 'N':
 			deleteZips = False
 			break
 		print("invalid input")
@@ -118,10 +118,10 @@ print("Loaded csv file and found {0} assets".format(len(assets)))
 print("=====\nWould you like to filter assets by a keyword? (y/n)")
 while True:
 	userInput = input()
-	if userInput == 'y':
+	if userInput == 'y' or userInput == 'Y':
 		keyword = input("Enter keyword (NOT CASE SENSITIVE): ")
 		break
-	if userInput == 'n':
+	if userInput == 'n' or userInput == 'N':
 		keyword = None
 		break
 	print("Invalid input")
@@ -130,7 +130,7 @@ while True:
 print("=====\nWould you like to filter assets by a download attribute? (resolution, filetype, etc) (y/n)")
 while True:
 	userInput = input()
-	if userInput == 'y':
+	if userInput == 'y' or userInput == 'Y':
 		print("Found the following download attributes in the csv file:")
 		print(listOfDownloadAttributes)
 		inputValid = False
@@ -141,7 +141,7 @@ while True:
 			else:
 				print("Invalid download attribute")
 		break
-	if userInput == 'n':
+	if userInput == 'n' or userInput == 'N':
 		attributeFilter = None
 		break
 	print("Invalid input")
@@ -150,7 +150,7 @@ while True:
 print("=====\nWould you like to filter the assets by their file extension? (zip, sbsar, etc) (y/n)")
 while True:
 	userInput = input()
-	if userInput == 'y':
+	if userInput == 'y' or userInput == 'Y':
 		print("Found the following file extensions in the csv file:")
 		print(listOfFileExtensions)
 		inputValid = False
@@ -161,7 +161,7 @@ while True:
 			else:
 				print("Invalid file extension")
 		break
-	if userInput == 'n':
+	if userInput == 'n' or userInput == 'N':
 		extensionFilter = None
 		break
 	print("Invalid input")
@@ -178,11 +178,11 @@ print("=====\nFound {0} assets that match the filters, with a combined size of {
 print("=====\nDisplay asset names? (y/n)")
 while True:
 	userInput = input()
-	if userInput == 'y':
+	if userInput == 'y' or userInput == 'Y':
 		for i in filteredAssets:
 			print(i[0]+"_"+i[1])
 		break
-	if userInput == 'n':
+	if userInput == 'n' or userInput == 'N':
 		break
 	print("Invalid input")
 	
@@ -190,10 +190,10 @@ while True:
 print("=====\nWould you like to download these assets? (y/n)")
 while True:
 	userInput = input()
-	if userInput == 'y':
+	if userInput == 'y' or userInput == 'Y':
 		download(filteredAssets)
 		break
-	if userInput == 'n':
+	if userInput == 'n' or userInput == 'N':
 		break
 	print("Invalid input")
 
