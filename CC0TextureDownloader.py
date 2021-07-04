@@ -1,5 +1,46 @@
 import requests
 import csv
+import copy
+import zipfile
+
+def filterByKeyword(assets, keyword):
+	i = 0
+	while i < len(assets):
+		if keyword.upper() not in assets[i][0].upper():
+			assets.pop(i)
+		else:
+			i+=1
+	return assets
+	
+def filterByDownloadAttribute(assets, attribute):
+	i = 0
+	while i < len(assets):
+		if assets[i][1] != attribute:
+			assets.pop(i)
+		else:
+			i+=1
+	return assets
+
+def getAssetsByFilters(assets, assetfilters):
+	assetsCopy = copy.deepcopy(assets) #deepcopy to avoid modifying original assets list
+	if assetfilters[0] != None:
+		assetsCopy = filterByKeyword(assetsCopy, assetfilters[0])
+	if assetfilters[1] != None:
+		assetsCopy = filterByDownloadAttribute(assetsCopy, assetfilters[1])
+	return assetsCopy
+				
+def download(assets):
+	fileSize = 0
+	for i in assets:
+		fileSize += int(i[3])
+	print("Attempting to download {0} assets with a filesize of {1} bytes ({2} gigabytes)".format(len(assets), fileSize, fileSize/1e+9))
+	
+	for i in assets:
+		try:
+			print("Downloading {0}_{1} from {2}".format(i[0], i[1], i[4]))
+			url = i[5]
+			r = requests.get(url, allow_redirects=True)
+			open(i[0]+'_'+i[1]+'.'+i[2], 'wb').write(r.content)
 			if i[2] == "ZIP":
 				print("Unzipping {0}_{1}.{2}".format(i[0],i[1],i[2]))
 				print(i[0]+'_'+i[1]+'.'+i[2])
