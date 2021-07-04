@@ -92,7 +92,6 @@ def download(assets):
 
 headers = {'User-Agent' : 'LJ3DSCRIPT'}
 url = 'https://ambientcg.com/api/v2/downloads_csv'
-
 print("Downloading asset data from https://ambientcg.com/api/v2/downloads_csv")
 r = requests.get(url, allow_redirects=True, headers=headers)
 filename = getFilename_fromCd(r.headers.get('content-disposition'))
@@ -116,7 +115,7 @@ for i in assets:
 print("Loaded csv file and found {0} assets".format(len(assets)))
 
 
-print("Would you like to filter assets by a keyword? (y/n)")
+print("=====\nWould you like to filter assets by a keyword? (y/n)")
 while True:
 	userInput = input()
 	if userInput == 'y':
@@ -128,7 +127,7 @@ while True:
 	print("Invalid input")
 
 
-print("Would you like to filter assets by a download attribute? (resolution, filetype, etc) (y/n)")
+print("=====\nWould you like to filter assets by a download attribute? (resolution, filetype, etc) (y/n)")
 while True:
 	userInput = input()
 	if userInput == 'y':
@@ -148,7 +147,7 @@ while True:
 	print("Invalid input")
 
 
-print("Would you like to filter the assets by their file extension? (zip, sbsar, etc) (y/n)")
+print("=====\nWould you like to filter the assets by their file extension? (zip, sbsar, etc) (y/n)")
 while True:
 	userInput = input()
 	if userInput == 'y':
@@ -174,9 +173,9 @@ filteredTotalSize = 0
 for i in filteredAssets:
 	filteredTotalSize += int(i[3])
 	
-print("Found {0} assets that match the filters, with a combined size of {1} bytes ({2} gigabytes)".format(len(filteredAssets), filteredTotalSize, filteredTotalSize/1e+9))
+print("=====\nFound {0} assets that match the filters, with a combined size of {1} bytes ({2} gigabytes)".format(len(filteredAssets), filteredTotalSize, filteredTotalSize/1e+9))
 
-print("Display asset names? (y/n)")
+print("=====\nDisplay asset names? (y/n)")
 while True:
 	userInput = input()
 	if userInput == 'y':
@@ -188,7 +187,7 @@ while True:
 	print("Invalid input")
 	
 	
-print("Would you like to download these assets? (y/n)")
+print("=====\nWould you like to download these assets? (y/n)")
 while True:
 	userInput = input()
 	if userInput == 'y':
