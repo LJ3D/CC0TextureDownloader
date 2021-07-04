@@ -73,14 +73,18 @@ def download(assets):
 			url = i[5]
 			r = requests.get(url, allow_redirects=True)
 			open(i[0]+'_'+i[1]+'.'+i[2], 'wb').write(r.content)
-			if i[2] == "zip":
+		except:
+			print("Failed to download {0}_{1} from {2}".format(i[0], i[1], i[4]))
+			
+		if i[2] == "zip":
+			try:
 				print("Unzipping {0}_{1}.{2}".format(i[0],i[1],i[2]))
 				with zipfile.ZipFile(i[0]+'_'+i[1]+'.'+i[2], 'r') as zip_ref:
 					zip_ref.extractall(i[0]+'_'+i[1])
 				if deleteZips == True:
 					os.remove(i[0]+'_'+i[1]+'.'+i[2])
-		except:
-			print("Failed to download {0}_{1} from {2}".format(i[0], i[1], i[4]))
+			except:
+				print("Failed to unzip {0}_{1}.{2}".format(i[0], i[1], i[2]))
 
 
 
@@ -109,8 +113,6 @@ for i in assets:
 	if i[2] not in listOfFileExtensions:
 		listOfFileExtensions.append(i[2])
 	totalSize += int(i[3])
-
-
 print("Loaded csv file and found {0} assets".format(len(assets)))
 
 
