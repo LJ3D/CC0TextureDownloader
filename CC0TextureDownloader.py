@@ -2,6 +2,7 @@ import requests
 import csv
 import copy
 import zipfile
+import os
 
 def filterByKeyword(assets, keyword):
 	i = 0
@@ -21,15 +22,37 @@ def filterByDownloadAttribute(assets, attribute):
 			i+=1
 	return assets
 
+def filterByFileExtension(assets, extension):
+	i = 0
+	while i < len(assets):
+		if assets[i][2].upper() != extension.upper():
+			assets.pop(i)
+		else:
+			i+=1
+	return assets
+
 def getAssetsByFilters(assets, assetfilters):
 	assetsCopy = copy.deepcopy(assets) #deepcopy to avoid modifying original assets list
 	if assetfilters[0] != None:
 		assetsCopy = filterByKeyword(assetsCopy, assetfilters[0])
 	if assetfilters[1] != None:
 		assetsCopy = filterByDownloadAttribute(assetsCopy, assetfilters[1])
+	if assetfilters[2] != None:
+		assetsCopy = filterByFileExtension(assetsCopy, assetfilters[2])
 	return assetsCopy
 				
 def download(assets):
+	print("Would you like to delete .zip files after they are extracted? (y/n)")
+	while True:
+		userInput = input()
+		if userInput == 'y':
+			deleteZips = True
+			break
+		if userInput == 'n':
+			deleteZips = False
+			break
+		print("invalid input")
+	
 	fileSize = 0
 	for i in assets:
 		fileSize += int(i[3])
@@ -43,9 +66,10 @@ def download(assets):
 			open(i[0]+'_'+i[1]+'.'+i[2], 'wb').write(r.content)
 			if i[2] == "zip":
 				print("Unzipping {0}_{1}.{2}".format(i[0],i[1],i[2]))
-				print(i[0]+'_'+i[1]+'.'+i[2])
 				with zipfile.ZipFile(i[0]+'_'+i[1]+'.'+i[2], 'r') as zip_ref:
 					zip_ref.extractall(i[0]+'_'+i[1])
+				if deleteZips == True:
+					os.remove(i[0]+'_'+i[1]+'.'+i[2])
 		except:
 			print("Failed to download {0}_{1} from {2}".format(i[0], i[1], i[4]))
 		
@@ -57,15 +81,18 @@ with open(defaultcsv, newline='') as f:
 	assets = list(reader)
 assets.pop(0)
 listOfDownloadAttributes = []
+listOfFileExtensions = []
 totalSize = 0
 for i in assets:
 	if i[1] not in listOfDownloadAttributes:
 		listOfDownloadAttributes.append(i[1])
-for i in assets:
+	if i[2] not in listOfFileExtensions:
+		listOfFileExtensions.append(i[2])
 	totalSize += int(i[3])
 
 
 print("Loaded csv file and found {0} assets".format(len(assets)))
+
 
 print("Would you like to filter assets by a keyword? (not case sensitive) (y/n)")
 while True:
@@ -77,13 +104,14 @@ while True:
 		keyword = None
 		break
 	print("Invalid input")
+
+
 print("Would you like to filter assets by a download attribute? (resolution, filetype, etc) (y/n)")
 while True:
 	userInput = input()
 	if userInput == 'y':
 		print("Found the following download attributes in the csv file:")
 		print(listOfDownloadAttributes)
-		print("Substance files have the download attribute '', just press enter if you want to filter for substance files")
 		inputValid = False
 		while inputValid != True:
 			attributeFilter = input("Enter download attribute (CASE SENSITIVE): ")
@@ -98,7 +126,27 @@ while True:
 	print("Invalid input")
 
 
-filteredAssets = getAssetsByFilters(assets, [keyword, attributeFilter])
+print("Would you like to filter the assets by their file extension? (zip, sbsar, etc) (y/n)")
+while True:
+	userInput = input()
+	if userInput == 'y':
+		print("Found the following file extensions in the csv file:")
+		print(listOfFileExtensions)
+		inputValid = False
+		while inputValid != True:
+			extensionFilter = input("Enter extension (NOT CASE SENSITIVE): ")
+			if extensionFilter in listOfFileExtensions:
+				inputValid = True
+			else:
+				print("Invalid file extension")
+		break
+	if userInput == 'n':
+		extensionFilter = None
+		break
+	print("Invalid input")
+
+
+filteredAssets = getAssetsByFilters(assets, [keyword, attributeFilter, extensionFilter])
 filteredAssets.sort()
 filteredTotalSize = 0
 for i in filteredAssets:
