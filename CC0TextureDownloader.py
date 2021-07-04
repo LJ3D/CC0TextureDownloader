@@ -41,7 +41,7 @@ def download(assets):
 			url = i[5]
 			r = requests.get(url, allow_redirects=True)
 			open(i[0]+'_'+i[1]+'.'+i[2], 'wb').write(r.content)
-			if i[2] == "ZIP":
+			if i[2] == "zip":
 				print("Unzipping {0}_{1}.{2}".format(i[0],i[1],i[2]))
 				print(i[0]+'_'+i[1]+'.'+i[2])
 				with zipfile.ZipFile(i[0]+'_'+i[1]+'.'+i[2], 'r') as zip_ref:
@@ -50,8 +50,8 @@ def download(assets):
 			print("Failed to download {0}_{1} from {2}".format(i[0], i[1], i[4]))
 		
 
-#['assetId', 'downloadAttribute', 'filetype', 'size', 'downloadLink', 'rawLink']
-defaultcsv = 'ambientCG_downloads_csv.csv'
+print("Note: Included csv file may be out of date, go to https://ambientcg.com/api/v2/downloads_csv to download an up to date version")
+defaultcsv = 'ambientCG_downloads_csv.csv' #['assetId', 'downloadAttribute', 'filetype', 'size', 'downloadLink', 'rawLink']
 with open(defaultcsv, newline='') as f:
 	reader = csv.reader(f)
 	assets = list(reader)
@@ -104,7 +104,7 @@ filteredTotalSize = 0
 for i in filteredAssets:
 	filteredTotalSize += int(i[3])
 	
-print("found {0} assets that match the filters, with a combined size of {1} bytes ({2} gigabytes)".format(len(filteredAssets), filteredTotalSize, filteredTotalSize/1e+9))
+print("Found {0} assets that match the filters, with a combined size of {1} bytes ({2} gigabytes)".format(len(filteredAssets), filteredTotalSize, filteredTotalSize/1e+9))
 
 print("Display asset names? (y/n)")
 while True:
