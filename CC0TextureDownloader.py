@@ -114,7 +114,7 @@ for i in assets:
 print("Loaded csv file and found {0} assets".format(len(assets)))
 
 
-print("Would you like to filter assets by a keyword? (not case sensitive) (y/n)")
+print("Would you like to filter assets by a keyword? (y/n)")
 while True:
 	userInput = input()
 	if userInput == 'y':
